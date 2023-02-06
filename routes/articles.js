@@ -61,6 +61,31 @@ router.get("/api/articles/:id", (req, res) => {
  * URI:            /api/articles/5d664b8b68b4bjdbjdbj
  * Description:    Delete an Article by Article ID
  */
+router.delete("/api/articles/:id", (req, res) => {
+	Article.findById(req.params.id)
+		.then((article) => {
+			if (article) {
+				//Pass the result of Mongoose's .remove method to the next promise on the '.then' chain
+				return article.remove();
+			} else {
+				//If we couldn't find a document with the matching ID
+				res.status(404).json({
+					error: {
+						name: "DocumentNotFoundError",
+						message: "The provided ID doesn't match any documnets",
+					},
+				});
+			}
+		})
+		.then(() => {
+			//If the deletion succeeded, return 204 and no JSON
+			res.status(204).end();
+		})
+		// catch any errors that might occur
+		.catch((error) => {
+			res.status(500).json({ error: error });
+		});
+});
 
 /**
  * Action:          UPDATE
