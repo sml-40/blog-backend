@@ -32,6 +32,28 @@ router.get("/api/articles", (req, res) => {
  * URI:            /api/articles/5d664b8b68b4bjdbjdbj
  * Description:    Get an individual Article by Article ID
  */
+router.get("/api/articles/:id", (req, res) => {
+	//use the Articles model imported above
+	Article.findById(req.params.id)
+		//return an articles as an array
+		.then((article) => {
+			if (article) {
+				res.status(200).json({ articles: article });
+			} else {
+				//If we couldn't find a document with the matching ID
+				res.status(404).json({
+					error: {
+						name: "DocumentNotFoundError",
+						message: "The provided ID doesn't match any documnets",
+					},
+				});
+			}
+		})
+		//Catch any errors that might occur
+		.catch((error) => {
+			res.status(500).json({ error: error });
+		});
+});
 
 /**
  * Action:          DESTROY
