@@ -1,3 +1,4 @@
+//Require necessary NPM Packages
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -8,11 +9,14 @@ const db = require("./config/db");
 mongoose.connect(db, { useNewUrlParser: true });
 mongoose.connection.once("open", () => console.log("Connected to MongoDB"));
 
+//Require Route Files
 const indexRouter = require("./routes/index");
 const articlesRouter = require("./routes/articles");
 
+//Instantiate Express Application Object
 const app = express();
 
+//Define PORT for the API to run on
 const port = process.env.PORT || 5000;
 
 /**Middleware
@@ -26,10 +30,12 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 
 /**ROUTES
+ *
  *Mount imported Routers
  */
+
 app.use(indexRouter);
 app.use(articlesRouter);
 
-//Start the server and listen
+//Start the server and listen and listen for requests on the given port
 app.listen(port, () => console.log(`blogy listening on ${port}`));
